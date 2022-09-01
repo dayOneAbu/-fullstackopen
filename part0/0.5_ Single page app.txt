@@ -1,0 +1,11 @@
+title Single page app
+
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML-page
+note over browser:
+the contents and the css of the page will 
+be calculated by the js in the html 
+end note
+
+

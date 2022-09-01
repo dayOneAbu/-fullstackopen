@@ -1,0 +1,24 @@
+title New note
+
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML-page
+note over server:
+the contents and the css of the page will 
+be calculated by the js in the html 
+end note
+note over browser:
+User insert new Note and 
+click save when this event is 
+created the first thing the page does is 
+to prevent the default refresh page and 
+sends the post request with payload  
+end note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/spa/new_note_spa
+server-->browser: 201 created
+
+note over server:
+the new note recived from 
+browser is added to the list and 
+the new json is sent back
+end note
