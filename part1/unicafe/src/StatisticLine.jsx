@@ -1,8 +1,11 @@
 function StatisticLine({ statName, value }) {
   return (
-    <p>
-      {statName} {value} {statName === "positive" && "%"}
-    </p>
+    <tr>
+      <td>{statName}</td>
+      <td>
+        {value} {statName === "positive" && "%"}
+      </td>
+    </tr>
   );
 }
 export default StatisticLine;
