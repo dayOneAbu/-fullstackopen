@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import NotificationMessage from "./components/NotificationMessage";
 import NumbersList from "./components/NumbersList";
 import PhonebookForm from "./components/PhonebookForm";
 import Search from "./components/Search";
@@ -13,6 +14,10 @@ function App() {
   const [formState, setFormState] = useState({ name: "", phone: "" });
   const [keyword, setKeyword] = useState("");
   const [persons, setPersons] = useState([]);
+  const [message, setMessage] = useState({
+    text: null,
+    type: "",
+  });
   useEffect(() => {
     getPhonebook()
       .then((res) => setPersons(res.data))
@@ -27,6 +32,18 @@ function App() {
     setPersons(() => {
       return [...res];
     });
+  };
+  const createMessageType = (text, type) => {
+    setMessage({
+      text,
+      type,
+    });
+    setTimeout(() => {
+      setMessage({
+        text: null,
+        type: "",
+      });
+    }, 5000);
   };
 
   const handelNewName = (e) => {
@@ -57,26 +74,46 @@ function App() {
         `${record.name} is already Added to phonebook, replace the old number with the new one?`
       );
       if (!confirm) {
-        return alert(`${record.name} is already Added to phonebook`);
-      }
-      return updatePhonebook(record.id, newPhonebook).then((res) => {
-        setPersons(
-          persons.map((person) => (person.id !== record.id ? person : res.data))
+        createMessageType(
+          `${record.name} was already Added to phonebook`,
+          "error"
         );
-      });
+      } else {
+        return updatePhonebook(record.id, newPhonebook).then((res) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== record.id ? person : res.data
+            )
+          );
+          createMessageType(
+            `${res.data.name} is Added to your phonebook`,
+            "success"
+          );
+        });
+      }
     } else {
       addPhonebook(newPhonebook, persons).then((res) => {
         setPersons((prev) => {
           return persons.concat(res.data);
         });
+        createMessageType(
+          `${res.data.name} is Added to your phonebook`,
+          "success"
+        );
       });
     }
   };
   const handleDelete = (person) => {
     deletePhonebook(person)
-      .then((res) => setPersons(persons.filter((p) => p.id !== person.id)))
+      .then((res) => {
+        createMessageType(`${person.name} is removed from server`, "error");
+        setPersons(persons.filter((p) => p.id !== person.id));
+      })
       .catch((err) => {
-        alert(`${person.name} was already deleted from server`);
+        createMessageType(
+          `${person.name} was already deleted from server`,
+          "error"
+        );
         setPersons(persons.filter((p) => p.id !== person.id));
       });
   };
@@ -85,6 +122,7 @@ function App() {
     <div>
       <h2>Phone book</h2>
       <Search keyword={keyword} onChange={(e) => handelSearch(e)} />
+      <NotificationMessage message={message} />
       <PhonebookForm
         formState={formState}
         onSubmit={(e) => handleOnSubmit(e)}
