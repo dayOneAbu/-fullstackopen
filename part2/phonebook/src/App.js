@@ -92,15 +92,22 @@ function App() {
         });
       }
     } else {
-      addPhonebook(newPhonebook, persons).then((res) => {
-        setPersons((prev) => {
-          return persons.concat(res.data);
+      addPhonebook(newPhonebook, persons)
+        .then((res) => {
+          setPersons((prev) => {
+            return persons.concat(res.data);
+          });
+          createMessageType(
+            `${res.data.name} is Added to your phonebook`,
+            "success"
+          );
+        })
+        .catch((err) => {
+          createMessageType(
+            `${err.response.data.error} is Added to your phonebook`,
+            "error"
+          );
         });
-        createMessageType(
-          `${res.data.name} is Added to your phonebook`,
-          "success"
-        );
-      });
     }
   };
   const handleDelete = (person) => {
