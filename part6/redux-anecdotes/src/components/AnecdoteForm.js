@@ -1,5 +1,4 @@
 import { useDispatch } from 'react-redux';
-import { createAnecdote } from '../reducers/anecdoteReducer';
 
 function AnecdoteForm() {
 	const dispatch = useDispatch();
@@ -7,7 +6,7 @@ function AnecdoteForm() {
 	const submitHandler = (e) => {
 		e.preventDefault();
 		const content = e.target.content.value;
-		dispatch(createAnecdote(content));
+		dispatch({ type: 'anecdotes/createAnecdote', payload: content });
 	};
 	return (
 		<div>
