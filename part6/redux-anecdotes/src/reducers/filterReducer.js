@@ -4,10 +4,17 @@ const filterReducer = createSlice({
 	name: 'filter',
 	initialState: '',
 	reducers: {
-		filterAnecdote(state, action) {
+		filter(state, action) {
 			return action.payload;
 		},
 	},
 });
-export const { filterAnecdote } = filterReducer.actions;
+export const { filter } = filterReducer.actions;
+
+export const filterAnecdote = (anecdote) => {
+	return (dispatch) => {
+		dispatch(filter(anecdote));
+	};
+};
+
 export default filterReducer.reducer;

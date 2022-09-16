@@ -1,19 +1,25 @@
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
-const Notification = () => {
+const Notification = (props) => {
 	const style = {
 		border: 'solid',
 		padding: 10,
 		borderWidth: 1,
 	};
-	const notification = useSelector((state) => state.notification);
+
 	return (
 		<>
-			{notification && (
-				<div style={style}>you have voted for {notification}</div>
+			{props.notification && (
+				<div style={style}>you have voted for {props.notification}</div>
 			)}
 		</>
 	);
 };
+const mapStateToProps = (state) => {
+	return {
+		notification: state.notification,
+	};
+};
 
-export default Notification;
+const ConnectedNotification = connect(mapStateToProps)(Notification);
+export default ConnectedNotification;

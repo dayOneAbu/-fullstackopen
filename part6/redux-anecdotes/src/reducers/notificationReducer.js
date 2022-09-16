@@ -13,13 +13,13 @@ export const notify = (content, time) => {
 			type: 'SET_NOTIFICATION',
 			payload: content,
 		});
-
-		setTimeout(() => {
+		const remove = setTimeout(() => {
 			dispatch({
 				type: 'SET_NOTIFICATION',
 				payload: null,
 			});
 		}, time * 1000);
+		clearTimeout(remove);
 	};
 };
 
