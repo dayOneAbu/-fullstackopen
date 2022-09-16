@@ -1,11 +1,13 @@
 import Anecdote from './Anecdote';
 import { useSelector, useDispatch } from 'react-redux';
-import { notify, un_notify } from '../reducers/notificationReducer';
+import { notify } from '../reducers/notificationReducer';
+import { voteAnecdote } from '../reducers/anecdoteReducer';
 function AnecdoteList() {
 	const anecdotes = useSelector((state) => state.anecdotes);
 	const dispatch = useDispatch();
-	const vote = (id) => {
-		dispatch({ type: 'anecdotes/voteAnecdote', payload: id });
+	const vote = (item) => {
+		dispatch(voteAnecdote(item));
+		// dispatch({ type: 'anecdotes/voteAnecdote', payload: id });
 	};
 	const filter = useSelector((state) => state.filter);
 	const anecdotesToBeVisible = filter
@@ -39,11 +41,8 @@ function AnecdoteList() {
 							content={anecdote.content}
 							votes={anecdote.votes}
 							onClick={() => {
-								vote(anecdote.id);
-								dispatch(notify(anecdote.content));
-								setTimeout(() => {
-									dispatch(un_notify());
-								}, 5000);
+								vote(anecdote);
+								dispatch(notify(anecdote.content, 5));
 							}}
 						/>
 					))}
