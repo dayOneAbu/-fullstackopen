@@ -6,19 +6,7 @@ const getAll = async () => {
 	const res = await axios.get(`${baseUrl}/blogs`);
 	return res.data;
 };
-const LogUserIn = async (data) => {
-	const res = await axios.post(`${baseUrl}/login/`, data);
-	return res.data;
-};
 
-const getLoggedUser = async () => {
-	const token = getStorageItem('loggedUserToken');
-	const config = {
-		headers: { Authorization: `bearer ${token}` },
-	};
-	const res = await axios.get(`${baseUrl}/users/me`, config);
-	return res.data;
-};
 const addNewPost = async (data) => {
 	const token = getStorageItem('loggedUserToken');
 	const config = {
@@ -35,6 +23,10 @@ const addLike = async (id, data) => {
 	const res = await axios.put(`${baseUrl}/blogs/${id}`, data, config);
 	return res.data;
 };
+const addComment = async (id, data) => {
+	const res = await axios.post(`${baseUrl}/blogs/${id}/comments`, data);
+	return res.data;
+};
 const deletePost = async (id) => {
 	const token = getStorageItem('loggedUserToken');
 	const config = {
@@ -43,5 +35,9 @@ const deletePost = async (id) => {
 	const res = await axios.delete(`${baseUrl}/blogs/${id}`, config);
 	return res.data;
 };
+const getPost = async (id) => {
+	const res = await axios.get(`${baseUrl}/blogs/${id}`);
+	return res.data;
+};
 
-export { addLike, getAll, deletePost, LogUserIn, getLoggedUser, addNewPost };
+export { addLike, getAll, addComment, deletePost, addNewPost, getPost };

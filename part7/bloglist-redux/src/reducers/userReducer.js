@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getLoggedUser, LogUserIn } from '../services/blogService';
+import {
+	getLoggedUser,
+	getUserDetail,
+	getUsers,
+	LogUserIn,
+} from '../services/usersService';
 import {
 	getStorageItem,
 	removeStorageItem,
@@ -9,18 +14,41 @@ import { notify } from './notificationReducer';
 
 const userReducer = createSlice({
 	name: 'user',
-	initialState: null,
+	initialState: {
+		currentUser: null,
+		users: [],
+		userDetail: {},
+	},
 	reducers: {
-		setUser(state, action) {
-			return action.payload;
+		setLoggedUser(state, action) {
+			return {
+				...state,
+				currentUser: action.payload,
+			};
 		},
-		removeUser(state, action) {
-			return action.payload;
+		removeLoggedUser(state, action) {
+			return {
+				...state,
+				currentUser: action.payload,
+			};
+		},
+		setUsers(state, action) {
+			return {
+				...state,
+				users: action.payload,
+			};
+		},
+		userDetail(state, action) {
+			return {
+				...state,
+				userDetail: action.payload,
+			};
 		},
 	},
 });
 
-export const { setUser, removeUser } = userReducer.actions;
+export const { setLoggedUser, removeLoggedUser, setUsers, userDetail } =
+	userReducer.actions;
 export const login = (userName, password) => {
 	return async (dispatch) => {
 		try {
@@ -28,7 +56,7 @@ export const login = (userName, password) => {
 			setStorageItem('loggedUserToken', token);
 			const data = await getLoggedUser();
 			setStorageItem('loggedUser', data);
-			dispatch(setUser(data));
+			dispatch(setLoggedUser(data));
 		} catch (err) {
 			dispatch(
 				notify(
@@ -42,17 +70,41 @@ export const login = (userName, password) => {
 		}
 	};
 };
-export const fetchUser = () => {
+export const loadUser = () => {
 	return async (dispatch) => {
 		const data = await getStorageItem('loggedUser');
-		dispatch(setUser(data));
+		dispatch(setLoggedUser(data));
 	};
 };
-export const logUserOut = () => {
+export const logOut = () => {
 	return async (dispatch) => {
 		removeStorageItem('loggedUserToken');
 		removeStorageItem('loggedUser');
-		dispatch(removeUser(null));
+		dispatch(removeLoggedUser(null));
+	};
+};
+export const fetchUsers = () => {
+	return async (dispatch) => {
+		const data = await getUsers();
+		dispatch(setUsers(data));
+	};
+};
+export const fetchUserDetail = (id) => {
+	return async (dispatch) => {
+		try {
+			const data = await getUserDetail(id);
+			dispatch(userDetail(data));
+		} catch (err) {
+			dispatch(
+				notify(
+					{
+						text: err.response.data.error,
+						type: 'error',
+					},
+					5
+				)
+			);
+		}
 	};
 };
 export default userReducer.reducer;

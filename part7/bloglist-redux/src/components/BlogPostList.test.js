@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BlogPostList from './BlogPostList';
-import { ToggleDetail } from './BlogPostList';
+
 import PostForm from './PostForm';
 
 test('renders content', async () => {
@@ -30,9 +30,7 @@ describe('<Togglable />', () => {
 
 	beforeEach(() => {
 		container = render(
-			<ToggleDetail label='show...'>
-				<div className='testDiv'>togglable content</div>
-			</ToggleDetail>
+			<div className='testDiv'>togglable content</div>
 		).container;
 	});
 
